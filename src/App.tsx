@@ -156,7 +156,7 @@ function App() {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            Google Haritalar'da ac
+                            Google Haritalar'da aç
                           </a>
                         )}
                         {key === "Tarih" &&
