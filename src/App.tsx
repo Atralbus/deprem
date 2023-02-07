@@ -42,8 +42,6 @@ const fetchRows = async (): Promise<any> => {
       }
     );
 
-    console.log(response.data);
-    debugger;
     return response.data;
   } catch (error) {
     console.error(error);
