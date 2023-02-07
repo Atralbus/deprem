@@ -17,7 +17,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { FC, useState } from "react";
 import { cities as cityOptions, City } from "./constants";
 
