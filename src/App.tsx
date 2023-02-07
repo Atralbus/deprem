@@ -63,7 +63,7 @@ function App() {
         {markers}
         {tooltipRow && (
           <InfoWindow
-            position={{ lat: tooltipRow.Enlem + 0.03, lng: tooltipRow.Boylam }}
+            position={{ lat: tooltipRow.Enlem, lng: tooltipRow.Boylam }}
           >
             <div>
               {Object.entries(tooltipRow).map(([key, value]) => (
