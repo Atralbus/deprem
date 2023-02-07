@@ -16,7 +16,7 @@ import {
   Marker,
 } from "@react-google-maps/api";
 import axios from "axios";
-import { isBefore, parse, sub } from "date-fns";
+import { format, isBefore, sub } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { MAPS_API_KEY } from "./config";
@@ -69,13 +69,21 @@ const fetchRows = async (): Promise<any> => {
 };
 
 function App() {
-  const [tooltipRow, setTooltipRow] = useState<{
-    Enlem: number;
-    Boylam: number;
-    "Google Maps URL": string;
-  }>();
+  const [data, setData] = useState<any[]>([]);
+  const [tooltipRow, setTooltipRow] = useState<
+    {
+      Enlem: number;
+      Boylam: number;
+      "Google Maps URL": string;
+    } & any
+  >();
   const [hour, setHour] = useState<Hour | null>(null);
-  const [rows, setRows] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchRows().then((data) => {
+      setData(data);
+    });
+  }, []);
 
   const handleHourFilter = (
     event: React.MouseEvent<HTMLElement>,
@@ -84,23 +92,15 @@ function App() {
     setHour(newHour);
   };
 
-  useEffect(() => {
-    fetchRows().then((rows) => setRows(rows));
-  }, []);
-
   const filtered = useMemo(() => {
-    if (!hour) return rows;
+    if (!hour) return data;
 
     const startHour = sub(new Date(), { hours: +hour });
-    console.log(startHour);
-    const filteredRows = rows.filter((row) => {
-      return isBefore(
-        startHour,
-        parse(row.Tarih, "yyyy-MM-dd HH:mm:ss", new Date())
-      );
+    const filteredRows = data.filter((row) => {
+      return isBefore(startHour, new Date(row.Tarih));
     });
     return filteredRows;
-  }, [hour]);
+  }, [hour, data]);
 
   const markers = useMemo(
     () =>
@@ -138,14 +138,30 @@ function App() {
               <div>
                 {Object.entries(tooltipRow).map(([key, value]) => (
                   <>
-                    <pre>{key}</pre>
-                    {value}
-                    <br />
-                    {key === "Google Maps URL" && (
-                      <a href={`${value}`} target="_blank" rel="noreferrer">
-                        Google Haritalar'da aç
-                      </a>
-                    )}
+                    <Typography variant="subtitle2" component="div">
+                      {key}
+                    </Typography>
+                    <Typography color="text.secondary" variant="body2">
+                      <>
+                        {key !== "Tarih" && (
+                          <>
+                            {value}
+                            <br />
+                          </>
+                        )}
+                        {key === "Google Maps URL" && (
+                          <a
+                            href={value as string}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Google Haritalar'da aç
+                          </a>
+                        )}
+                        {key === "Tarih" &&
+                          format(new Date(value as any), "dd/MM/yyyy HH:mm:ss")}
+                      </>
+                    </Typography>
                   </>
                 ))}
               </div>
