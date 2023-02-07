@@ -3,6 +3,7 @@ import {
   Accordion,
   AccordionDetails,
   Box,
+  Link,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
@@ -192,6 +193,14 @@ function App() {
                 ))}
               </ToggleButtonGroup>
             </Stack>
+            <Box mt={1}>
+              <Link
+                href="https://storage.googleapis.com/deprem-app-bucket/database.json"
+                target="_blank"
+              >
+                Veri kaynağı
+              </Link>
+            </Box>
           </AccordionDetails>
         </Accordion>
       </Box>
