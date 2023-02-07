@@ -1,26 +1,11 @@
-import { ExpandMore } from "@mui/icons-material";
-import {
-  Accordion,
-  AccordionDetails,
-  Box,
-  Link,
-  Stack,
-  ToggleButton,
-  ToggleButtonGroup,
-} from "@mui/material";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Typography from "@mui/material/Typography";
-import {
-  GoogleMap,
-  InfoWindow,
-  LoadScript,
-  Marker,
-} from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import axios from "axios";
-import { format, isBefore, sub } from "date-fns";
+import { isBefore, sub } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { MAPS_API_KEY } from "./config";
+import Filters from "./Filters";
+import Tooltip from "./Tooltip";
 
 const containerStyle = {
   width: "100vw",
@@ -129,81 +114,10 @@ function App() {
           onClick={() => setTooltipRow(undefined)}
         >
           {markers}
-          {tooltipRow && (
-            <InfoWindow
-              position={{ lat: tooltipRow.Enlem, lng: tooltipRow.Boylam }}
-              options={{
-                pixelOffset: { height: -20, equals: () => true, width: 0 },
-              }}
-            >
-              <div>
-                {Object.entries(tooltipRow).map(([key, value]) => (
-                  <>
-                    <Typography variant="subtitle2" component="div">
-                      {key}
-                    </Typography>
-                    <Typography color="text.secondary" variant="body2">
-                      <>
-                        {key !== "Tarih" && (
-                          <>
-                            {value}
-                            <br />
-                          </>
-                        )}
-                        {key === "Google Maps URL" && (
-                          <a
-                            href={value as string}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            Google Haritalar'da aç
-                          </a>
-                        )}
-                        {key === "Tarih" &&
-                          format(new Date(value as any), "dd/MM/yyyy HH:mm:ss")}
-                      </>
-                    </Typography>
-                  </>
-                ))}
-              </div>
-            </InfoWindow>
-          )}
+          {tooltipRow && <Tooltip tooltipRow={tooltipRow} />}
         </GoogleMap>
       </LoadScript>
-      <Box position="absolute" top={90} left={10}>
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            expandIcon={<ExpandMore />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Filtrele</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography>Son</Typography>
-              <ToggleButtonGroup
-                exclusive
-                value={hour}
-                onChange={handleHourFilter}
-                size="small"
-              >
-                {Object.values(Hour).map((hour) => (
-                  <ToggleButton value={hour}>{hour} saat</ToggleButton>
-                ))}
-              </ToggleButtonGroup>
-            </Stack>
-            <Box mt={1}>
-              <Link
-                href="https://storage.googleapis.com/deprem-app-bucket/database.json"
-                target="_blank"
-              >
-                Veri kaynağı
-              </Link>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
-      </Box>
+      <Filters onHourFilter={handleHourFilter} hour={hour} />
     </>
   );
 }
