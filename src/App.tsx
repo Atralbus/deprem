@@ -64,6 +64,9 @@ function App() {
         {tooltipRow && (
           <InfoWindow
             position={{ lat: tooltipRow.Enlem, lng: tooltipRow.Boylam }}
+            options={{
+              pixelOffset: { height: 20, equals: () => true, width: 0 },
+            }}
           >
             <div>
               {Object.entries(tooltipRow).map(([key, value]) => (
