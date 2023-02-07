@@ -1,10 +1,12 @@
+import { SelectChangeEvent } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import axios from "axios";
 import { isBefore, sub } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { MAPS_API_KEY } from "./config";
-import Filters from "./Filters";
+import { City, colorMap } from "./constants";
+import Filters, { Hour } from "./Filters";
 import Tooltip from "./Tooltip";
 
 const containerStyle = {
@@ -16,24 +18,6 @@ const center = {
   lat: 36.908453,
   lng: 36.640183,
 };
-
-const map = {
-  hatay: "yellow",
-  kahramanmaraş: "blue",
-  adıyaman: "green",
-  malatya: "ltblue",
-  gaziantep: "orange",
-  diyarbakır: "pink",
-  osmaniye: "purple",
-  elazığ: "red",
-};
-
-enum Hour {
-  H1 = "1",
-  H2 = "2",
-  H4 = "4",
-  H8 = "8",
-}
 
 const fetchRows = async (): Promise<any> => {
   try {
@@ -64,6 +48,7 @@ function App() {
     } & any
   >();
   const [hour, setHour] = useState<Hour | null>(null);
+  const [cities, setCities] = useState<City[]>([]);
 
   useEffect(() => {
     fetchRows().then((data) => {
@@ -79,14 +64,17 @@ function App() {
   };
 
   const filtered = useMemo(() => {
-    if (!hour) return data;
+    if (!hour && !cities.length) return data;
 
-    const startHour = sub(new Date(), { hours: +hour });
+    const startHour = hour ? sub(new Date(), { hours: +hour }) : new Date();
     const filteredRows = data.filter((row) => {
-      return isBefore(startHour, new Date(row.Tarih));
+      return (
+        (!hour || isBefore(startHour, new Date(row.Tarih))) &&
+        (!cities.length || cities.includes(row.Şehir))
+      );
     });
     return filteredRows;
-  }, [hour, data]);
+  }, [hour, data, cities]);
 
   const markers = useMemo(
     () =>
@@ -97,13 +85,21 @@ function App() {
           onClick={() => setTooltipRow(row)}
           icon={{
             url: `http://maps.google.com/mapfiles/ms/icons/${
-              map[row.Şehir as keyof typeof map]
+              colorMap[row.Şehir as keyof typeof colorMap]
             }-dot.png`,
           }}
         ></Marker>
       )),
     [filtered]
   );
+
+  const handleCityFilter = (event: SelectChangeEvent<typeof cities>) => {
+    const {
+      target: { value },
+    } = event;
+    setCities(typeof value === "string" ? (value.split(",") as City[]) : value);
+  };
+
   return (
     <>
       <LoadScript googleMapsApiKey={MAPS_API_KEY}>
@@ -117,7 +113,12 @@ function App() {
           {tooltipRow && <Tooltip tooltipRow={tooltipRow} />}
         </GoogleMap>
       </LoadScript>
-      <Filters onHourFilter={handleHourFilter} hour={hour} />
+      <Filters
+        onHourFilter={handleHourFilter}
+        hour={hour}
+        onCityFilter={handleCityFilter}
+        cities={cities}
+      />
     </>
   );
 }

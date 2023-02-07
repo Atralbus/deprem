@@ -1,22 +1,27 @@
-import { Clear, ExpandMore, FilterList } from "@mui/icons-material";
+import { Clear, FilterList } from "@mui/icons-material";
 import {
-  Accordion,
-  AccordionDetails,
   Box,
+  capitalize,
+  FormControl,
   IconButton,
+  InputLabel,
   Link,
+  MenuItem,
+  OutlinedInput,
   Paper,
+  Select,
+  SelectChangeEvent,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
 } from "@mui/material";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { FC, useState } from "react";
+import { cities as cityOptions, City } from "./constants";
 
-enum Hour {
+export enum Hour {
   H1 = "1",
   H2 = "2",
   H4 = "4",
@@ -29,9 +34,11 @@ type Props = {
     event: React.MouseEvent<HTMLElement>,
     newHour: Hour | null
   ) => void;
+  onCityFilter: (event: SelectChangeEvent<typeof cityOptions>) => void;
+  cities: City[];
 };
 
-const Filters: FC<Props> = ({ hour, onHourFilter }) => {
+const Filters: FC<Props> = ({ hour, onHourFilter, onCityFilter, cities }) => {
   const [closed, setClosed] = useState(false);
 
   return (
@@ -55,27 +62,44 @@ const Filters: FC<Props> = ({ hour, onHourFilter }) => {
             <Typography variant="h6" pb={1}>
               Filtrele
             </Typography>
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography>Son</Typography>
-              <ToggleButtonGroup
-                exclusive
-                value={hour}
-                onChange={onHourFilter}
-                size="small"
-              >
-                {Object.values(Hour).map((hour) => (
-                  <ToggleButton value={hour}>{hour} saat</ToggleButton>
-                ))}
-              </ToggleButtonGroup>
+            <Stack spacing={2}>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Typography>Son</Typography>
+                <ToggleButtonGroup
+                  exclusive
+                  value={hour}
+                  onChange={onHourFilter}
+                  size="small"
+                >
+                  {Object.values(Hour).map((hour) => (
+                    <ToggleButton value={hour}>{hour} saat</ToggleButton>
+                  ))}
+                </ToggleButtonGroup>
+              </Stack>
+              <FormControl fullWidth size="small">
+                <InputLabel>Şehirler</InputLabel>
+                <Select
+                  multiple
+                  value={cities}
+                  onChange={onCityFilter}
+                  input={<OutlinedInput label="Şehirler" />}
+                >
+                  {cityOptions.map((city) => (
+                    <MenuItem key={city} value={city}>
+                      {capitalize(city)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Box>
+                <Link
+                  href="https://storage.googleapis.com/deprem-app-bucket/database.json"
+                  target="_blank"
+                >
+                  Veri kaynağı
+                </Link>
+              </Box>
             </Stack>
-            <Box mt={1}>
-              <Link
-                href="https://storage.googleapis.com/deprem-app-bucket/database.json"
-                target="_blank"
-              >
-                Veri kaynağı
-              </Link>
-            </Box>
           </>
         )}
       </Paper>
