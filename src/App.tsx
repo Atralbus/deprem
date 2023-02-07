@@ -8,7 +8,6 @@ import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { MAPS_API_KEY } from "./config";
-// import rows from "./data.json";
 
 const containerStyle = {
   width: "100vw",
