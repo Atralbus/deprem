@@ -4,10 +4,11 @@ import {
   LoadScript,
   Marker,
 } from "@react-google-maps/api";
-import { useMemo, useState } from "react";
+import axios from "axios";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { MAPS_API_KEY } from "./config";
-import rows from "./data.json";
+// import rows from "./data.json";
 
 const containerStyle = {
   width: "100vw",
@@ -30,11 +31,43 @@ const map = {
   elazığ: "red",
 };
 
+const fetchRows = async (): Promise<any> => {
+  try {
+    const response = await axios.get(
+      "https://storage.googleapis.com/deprem-app-bucket/database.json",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
+
+    // const data = await response.data;
+    console.log(response.data);
+    debugger;
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 function App() {
-  const [tooltipRow, setTooltipRow] = useState<{
-    Enlem: number;
-    Boylam: number;
-  }>();
+  const [rows, setRows] = useState<any[]>([]);
+  const [tooltipRow, setTooltipRow] = useState<
+    {
+      Enlem: number;
+      Boylam: number;
+      "Google Maps URL": string;
+    } & any
+  >();
+
+  useEffect(() => {
+    fetchRows().then((data) => {
+      setRows(data);
+    });
+  }, []);
 
   const markers = useMemo(
     () =>
@@ -50,7 +83,7 @@ function App() {
           }}
         ></Marker>
       )),
-    []
+    [rows]
   );
   return (
     <LoadScript googleMapsApiKey={MAPS_API_KEY}>
@@ -73,6 +106,12 @@ function App() {
                 <>
                   <pre>{key}</pre>
                   {value}
+                  <br />
+                  {key === "Google Maps URL" && (
+                    <a href={value as string} target="_blank" rel="noreferrer">
+                      Google Haritalar'da ac
+                    </a>
+                  )}
                 </>
               ))}
             </div>
