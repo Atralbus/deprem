@@ -65,7 +65,7 @@ function App() {
           <InfoWindow
             position={{ lat: tooltipRow.Enlem, lng: tooltipRow.Boylam }}
             options={{
-              pixelOffset: { height: 20, equals: () => true, width: 0 },
+              pixelOffset: { height: -20, equals: () => true, width: 0 },
             }}
           >
             <div>
