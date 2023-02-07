@@ -44,19 +44,15 @@ const Filters: FC<Props> = ({ hour, onHourFilter, onCityFilter, cities }) => {
   return (
     <Box position="absolute" top={60} left={10}>
       <Paper sx={{ p: closed ? 0.5 : 2 }}>
-        <Grid2
-          container
-          direction="row-reverse"
-          onClick={() => setClosed((closed) => !closed)}
-        >
-          <Grid2>
-            <Tooltip title={closed ? "Filtreleri aç" : ""} enterDelay={500}>
-              <IconButton size="small">
-                {closed ? <FilterList /> : <Clear />}
-              </IconButton>
-            </Tooltip>
-          </Grid2>
-        </Grid2>
+        <Tooltip title={closed ? "Filtreleri aç" : ""} enterDelay={500}>
+          <IconButton
+            size="small"
+            onClick={() => setClosed((closed) => !closed)}
+            sx={closed ? undefined : { position: "absolute", right: 8, top: 8 }}
+          >
+            {closed ? <FilterList /> : <Clear />}
+          </IconButton>
+        </Tooltip>
         {!closed && (
           <>
             <Typography variant="h6" pb={1}>
