@@ -15,11 +15,11 @@ import {
   LoadScript,
   Marker,
 } from "@react-google-maps/api";
-import { isBefore, parse, sub } from "date-fns";
-import { useMemo, useState } from "react";
+import axios from "axios";
+import { format, isBefore, sub } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { MAPS_API_KEY } from "./config";
-import rows from "./data.json";
 
 const containerStyle = {
   width: "100vw",
@@ -49,12 +49,41 @@ enum Hour {
   H8 = "8",
 }
 
+const fetchRows = async (): Promise<any> => {
+  try {
+    const response = await axios.get(
+      "https://storage.googleapis.com/deprem-app-bucket/database.json",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 function App() {
-  const [tooltipRow, setTooltipRow] = useState<{
-    Enlem: number;
-    Boylam: number;
-  }>();
+  const [data, setData] = useState<any[]>([]);
+  const [tooltipRow, setTooltipRow] = useState<
+    {
+      Enlem: number;
+      Boylam: number;
+      "Google Maps URL": string;
+    } & any
+  >();
   const [hour, setHour] = useState<Hour | null>(null);
+
+  useEffect(() => {
+    fetchRows().then((data) => {
+      setData(data);
+    });
+  }, []);
 
   const handleHourFilter = (
     event: React.MouseEvent<HTMLElement>,
@@ -64,18 +93,14 @@ function App() {
   };
 
   const filtered = useMemo(() => {
-    if (!hour) return rows;
+    if (!hour) return data;
 
     const startHour = sub(new Date(), { hours: +hour });
-    console.log(startHour);
-    const filteredRows = rows.filter((row) => {
-      return isBefore(
-        startHour,
-        parse(row.Tarih, "yyyy-MM-dd HH:mm:ss", new Date())
-      );
+    const filteredRows = data.filter((row) => {
+      return isBefore(startHour, new Date(row.Tarih));
     });
     return filteredRows;
-  }, [hour]);
+  }, [hour, data]);
 
   const markers = useMemo(
     () =>
@@ -113,8 +138,30 @@ function App() {
               <div>
                 {Object.entries(tooltipRow).map(([key, value]) => (
                   <>
-                    <pre>{key}</pre>
-                    {value}
+                    <Typography variant="subtitle2" component="div">
+                      {key}
+                    </Typography>
+                    <Typography color="text.secondary" variant="body2">
+                      <>
+                        {key !== "Tarih" && (
+                          <>
+                            {value}
+                            <br />
+                          </>
+                        )}
+                        {key === "Google Maps URL" && (
+                          <a
+                            href={value as string}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Google Haritalar'da ac
+                          </a>
+                        )}
+                        {key === "Tarih" &&
+                          format(new Date(value as any), "dd/MM/yyyy HH:mm:ss")}
+                      </>
+                    </Typography>
                   </>
                 ))}
               </div>
