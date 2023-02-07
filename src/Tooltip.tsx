@@ -16,6 +16,12 @@ type Props = {
 const Tooltip: FC<Props> = ({ tooltipRow }) => {
   const getLabel = useCallback((key: string, value: string | number) => {
     switch (key) {
+      case "URL":
+        return (
+          <Link href={value as string} target="_blank" rel="noreferrer">
+            {value}
+          </Link>
+        );
       case "Tarih":
         return format(new Date(value as any), "dd/MM/yyyy HH:mm:ss");
       case "Google Maps URL":
