@@ -1,5 +1,10 @@
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { useMemo } from "react";
+import {
+  GoogleMap,
+  InfoWindow,
+  LoadScript,
+  Marker,
+} from "@react-google-maps/api";
+import { useMemo, useState } from "react";
 import "./App.css";
 import { MAPS_API_KEY } from "./config";
 import rows from "./data.json";
@@ -26,25 +31,50 @@ const map = {
 };
 
 function App() {
+  const [tooltipRow, setTooltipRow] = useState<{
+    Enlem: number;
+    Boylam: number;
+  }>();
+
   const markers = useMemo(
     () =>
       rows.map((row) => (
         <Marker
           key={row.URL}
           position={{ lat: row.Enlem, lng: row.Boylam }}
+          onClick={() => setTooltipRow(row)}
           icon={{
             url: `http://maps.google.com/mapfiles/ms/icons/${
               map[row.Şehir as keyof typeof map]
             }-dot.png`,
           }}
-        />
+        ></Marker>
       )),
     []
   );
   return (
     <LoadScript googleMapsApiKey={MAPS_API_KEY}>
-      <GoogleMap mapContainerStyle={containerStyle} zoom={10} center={center}>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        zoom={10}
+        center={center}
+        onClick={() => setTooltipRow(undefined)}
+      >
         {markers}
+        {tooltipRow && (
+          <InfoWindow
+            position={{ lat: tooltipRow.Enlem + 0.03, lng: tooltipRow.Boylam }}
+          >
+            <div>
+              {Object.entries(tooltipRow).map(([key, value]) => (
+                <>
+                  <pre>{key}</pre>
+                  {value}
+                </>
+              ))}
+            </div>
+          </InfoWindow>
+        )}
       </GoogleMap>
     </LoadScript>
   );
