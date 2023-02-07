@@ -42,7 +42,6 @@ const fetchRows = async (): Promise<any> => {
       }
     );
 
-    // const data = await response.data;
     console.log(response.data);
     debugger;
     return response.data;
