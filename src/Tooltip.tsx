@@ -8,6 +8,7 @@ type Datum = {
   Enlem: number;
   Boylam: number;
   "Google Maps URL": string;
+  "Telefon no": string;
 };
 
 type Props = {
@@ -35,6 +36,22 @@ const Tooltip: FC<Props> = ({ tooltipRow, setTooltipRow }) => {
             Google Haritalar'da aç
           </Link>
         );
+
+      case "Telefon no": {
+        if (!value) return "-";
+        return (
+          <Stack direction="row" spacing={1}>
+            <Link href={`tel:${value}`}>{value}</Link>
+            <Link
+              href={`https://wa.me/${value}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              WhatsApp
+            </Link>
+          </Stack>
+        );
+      }
       default:
         return value;
     }
