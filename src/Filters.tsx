@@ -1,4 +1,4 @@
-import { Clear, FilterList } from "@mui/icons-material";
+import { Clear, FilterList, GitHub } from "@mui/icons-material";
 import {
   Box,
   capitalize,
@@ -88,14 +88,30 @@ const Filters: FC<Props> = ({ hour, onHourFilter, onCityFilter, cities }) => {
                 </Select>
               </FormControl>
               <Divider />
-              <Stack spacing={1} direction="row">
-                <Typography>Veri kaynağı: </Typography>
-                <Link href={xlsxUrl} target="_blank" rel="noreferrer">
-                  Excel
-                </Link>
-                <Link href={jsonUrl} target="_blank" rel="noreferrer">
-                  JSON
-                </Link>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Stack spacing={1} direction="row">
+                  <Typography>Veri kaynağı: </Typography>
+                  <Link href={xlsxUrl} target="_blank" rel="noreferrer">
+                    Excel
+                  </Link>
+                  <Link href={jsonUrl} target="_blank" rel="noreferrer">
+                    JSON
+                  </Link>
+                </Stack>
+                <Tooltip title="Teknik iletişim">
+                  <IconButton
+                    component={Link}
+                    href="https://github.com/Atralbus/deprem"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <GitHub />
+                  </IconButton>
+                </Tooltip>
               </Stack>
             </Stack>
           </>
