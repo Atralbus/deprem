@@ -11,9 +11,10 @@ type Datum = {
 
 type Props = {
   tooltipRow: Datum;
+  setTooltipRow: (tooltipRow?: Datum) => void;
 };
 
-const Tooltip: FC<Props> = ({ tooltipRow }) => {
+const Tooltip: FC<Props> = ({ tooltipRow, setTooltipRow }) => {
   const getLabel = useCallback((key: string, value: string | number) => {
     switch (key) {
       case "URL":
@@ -45,6 +46,7 @@ const Tooltip: FC<Props> = ({ tooltipRow }) => {
       options={{
         pixelOffset: { height: -20, equals: () => true, width: 0 },
       }}
+      onCloseClick={() => setTooltipRow(undefined)}
     >
       <Stack spacing={1} sx={{ wordBreak: "break-word" }}>
         {Object.entries(tooltipRow).map(([key, value]) => (

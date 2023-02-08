@@ -117,7 +117,9 @@ function App() {
           onClick={() => setTooltipRow(undefined)}
         >
           {markers}
-          {tooltipRow && <Tooltip tooltipRow={tooltipRow} />}
+          {tooltipRow && (
+            <Tooltip tooltipRow={tooltipRow} setTooltipRow={setTooltipRow} />
+          )}
         </GoogleMap>
       </LoadScript>
       <Backdrop open={isLoading}>
