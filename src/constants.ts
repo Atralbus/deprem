@@ -21,3 +21,7 @@ export const colorMap = {
   [City.Osmaniye]: "purple",
   [City.Elazığ]: "red",
 };
+
+const baseUrl = "https://storage.googleapis.com/deprem-app-bucket/database.";
+export const jsonUrl = `${baseUrl}json`;
+export const xlsxUrl = `${baseUrl}xlsx`;

@@ -2,6 +2,7 @@ import { Clear, FilterList } from "@mui/icons-material";
 import {
   Box,
   capitalize,
+  Divider,
   FormControl,
   IconButton,
   InputLabel,
@@ -18,7 +19,7 @@ import {
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { FC, useState } from "react";
-import { cities as cityOptions, City } from "./constants";
+import { cities as cityOptions, City, jsonUrl, xlsxUrl } from "./constants";
 
 export enum Hour {
   H1 = "1",
@@ -86,14 +87,16 @@ const Filters: FC<Props> = ({ hour, onHourFilter, onCityFilter, cities }) => {
                   ))}
                 </Select>
               </FormControl>
-              <Box>
-                <Link
-                  href="https://storage.googleapis.com/deprem-app-bucket/database.json"
-                  target="_blank"
-                >
-                  Veri kaynağı
+              <Divider />
+              <Stack spacing={1} direction="row">
+                <Typography>Veri kaynağı: </Typography>
+                <Link href={xlsxUrl} target="_blank" rel="noreferrer">
+                  Excel
                 </Link>
-              </Box>
+                <Link href={jsonUrl} target="_blank" rel="noreferrer">
+                  JSON
+                </Link>
+              </Stack>
             </Stack>
           </>
         )}

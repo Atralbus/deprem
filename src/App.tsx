@@ -5,7 +5,7 @@ import { isBefore, sub } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { MAPS_API_KEY } from "./config";
-import { City, colorMap } from "./constants";
+import { City, colorMap, jsonUrl } from "./constants";
 import Filters, { Hour } from "./Filters";
 import Tooltip from "./Tooltip";
 
@@ -21,15 +21,12 @@ const center = {
 
 const fetchRows = async (): Promise<any> => {
   try {
-    const response = await axios.get(
-      "https://storage.googleapis.com/deprem-app-bucket/database.json",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
-    );
+    const response = await axios.get(jsonUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
 
     return response.data;
   } catch (error) {
