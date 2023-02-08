@@ -44,7 +44,7 @@ function App() {
       "Google Maps URL": string;
     } & any
   >();
-  const [hour, setHour] = useState<Hour | null>(null);
+  const [hour, setHour] = useState<Hour | null>(Hour.H8);
   const [cities, setCities] = useState<City[]>([]);
   const [isLoading, setLoading] = useState(false);
 
