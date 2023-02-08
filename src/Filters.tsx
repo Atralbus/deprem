@@ -77,7 +77,7 @@ const Filters: FC<Props> = ({
             </Typography>
             <Stack spacing={2}>
               <Typography color="textSecondary">
-                {numberOfRowsDisplayed} adet bildirim görüntüleniyor.
+                {numberOfRowsDisplayed} bildirim görüntüleniyor.
               </Typography>
               <Grid2
                 container
