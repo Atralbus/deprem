@@ -1,4 +1,4 @@
-import { Clear, FilterList, GitHub } from "@mui/icons-material";
+import { Clear, DeleteOutline, FilterList, GitHub } from "@mui/icons-material";
 import {
   Box,
   capitalize,
@@ -30,10 +30,7 @@ export enum Hour {
 
 type Props = {
   hour: Hour | null;
-  onHourFilter: (
-    event: React.MouseEvent<HTMLElement>,
-    newHour: Hour | null
-  ) => void;
+  onHourFilter: (newHour: Hour | null) => void;
   onCityFilter: (event: SelectChangeEvent<typeof cityOptions>) => void;
   cities: City[];
 };
@@ -64,13 +61,18 @@ const Filters: FC<Props> = ({ hour, onHourFilter, onCityFilter, cities }) => {
                 <ToggleButtonGroup
                   exclusive
                   value={hour}
-                  onChange={onHourFilter}
+                  onChange={(_, newHour) => onHourFilter(newHour)}
                   size="small"
                 >
                   {Object.values(Hour).map((hour) => (
                     <ToggleButton value={hour}>{hour} saat</ToggleButton>
                   ))}
                 </ToggleButtonGroup>
+                <Tooltip title="Filtreyi kaldır">
+                  <IconButton onClick={() => onHourFilter(null)}>
+                    <DeleteOutline />
+                  </IconButton>
+                </Tooltip>
               </Stack>
               <FormControl fullWidth size="small">
                 <InputLabel>Şehirler</InputLabel>
