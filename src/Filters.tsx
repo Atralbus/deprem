@@ -18,6 +18,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import { format } from "date-fns";
 import { FC, useState } from "react";
 import { cities as cityOptions, City, jsonUrl, xlsxUrl } from "./constants";
 
@@ -36,10 +37,19 @@ type Props = {
   ) => void;
   onCityFilter: (event: SelectChangeEvent<typeof cityOptions>) => void;
   cities: City[];
+  lastUpdatedDate?: string;
 };
 
-const Filters: FC<Props> = ({ hour, onHourFilter, onCityFilter, cities }) => {
+const Filters: FC<Props> = ({
+  hour,
+  onHourFilter,
+  onCityFilter,
+  cities,
+  lastUpdatedDate,
+}) => {
   const [closed, setClosed] = useState(false);
+
+  console.log(`lastUpdatedDate: `, lastUpdatedDate);
 
   return (
     <Box position="absolute" top={60} left={10}>
@@ -102,6 +112,7 @@ const Filters: FC<Props> = ({ hour, onHourFilter, onCityFilter, cities }) => {
                     JSON
                   </Link>
                 </Stack>
+
                 <Tooltip title="Teknik iletişim">
                   <IconButton
                     component={Link}
@@ -112,6 +123,14 @@ const Filters: FC<Props> = ({ hour, onHourFilter, onCityFilter, cities }) => {
                     <GitHub />
                   </IconButton>
                 </Tooltip>
+              </Stack>
+              <Stack>
+                <Typography>
+                  Verinin son güncellenme tarihi:{" "}
+                  {lastUpdatedDate
+                    ? format(new Date(+lastUpdatedDate), "dd/MM/yyyy HH:mm:ss")
+                    : ""}
+                </Typography>
               </Stack>
             </Stack>
           </>

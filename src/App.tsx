@@ -48,6 +48,8 @@ function App() {
   const [cities, setCities] = useState<City[]>([]);
   const [isLoading, setLoading] = useState(false);
 
+  console.log(`data: `, data[0]);
+
   useEffect(() => {
     setLoading(true);
     fetchRows()
@@ -119,12 +121,15 @@ function App() {
       <Backdrop open={isLoading}>
         <CircularProgress sx={{ color: "#fff" }} />
       </Backdrop>
-      <Filters
-        onHourFilter={handleHourFilter}
-        hour={hour}
-        onCityFilter={handleCityFilter}
-        cities={cities}
-      />
+      {!isLoading && (
+        <Filters
+          onHourFilter={handleHourFilter}
+          hour={hour}
+          onCityFilter={handleCityFilter}
+          cities={cities}
+          lastUpdatedDate={data[0]?.Tarih}
+        />
+      )}
     </>
   );
 }
