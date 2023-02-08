@@ -49,6 +49,7 @@ function App() {
   const [cities, setCities] = useState<City[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [lastUpdatedDate, setLastModifiedDate] = useState<string>();
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -72,17 +73,18 @@ function App() {
   };
 
   const filtered = useMemo(() => {
-    if (!hour && !cities.length) return data;
+    if (!hour && !cities.length && !categories.length) return data;
 
     const startHour = hour ? sub(new Date(), { hours: +hour }) : undefined;
     const filteredRows = data.filter((row) => {
       return (
         (!startHour || isBefore(startHour, getDateWithoutOffset(row.Tarih))) &&
-        (!cities.length || cities.includes(row.Şehir))
+        (!cities.length || cities.includes(row.Şehir)) &&
+        (!categories.length || categories.includes(row.Kategori))
       );
     });
     return filteredRows;
-  }, [hour, data, cities]);
+  }, [hour, data, cities, categories]);
 
   const markers = useMemo(
     () =>
@@ -106,6 +108,13 @@ function App() {
       target: { value },
     } = event;
     setCities(typeof value === "string" ? (value.split(",") as City[]) : value);
+  };
+
+  const handleCategoryFilter = (event: SelectChangeEvent<string[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setCategories(typeof value === "string" ? value.split(",") : value);
   };
 
   return (
@@ -133,6 +142,9 @@ function App() {
           onCityFilter={handleCityFilter}
           cities={cities}
           lastUpdatedDate={lastUpdatedDate}
+          categories={categories}
+          onCategoryFilter={handleCategoryFilter}
+          numberOfRowsDisplayed={filtered.length}
         />
       )}
     </>

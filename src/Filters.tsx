@@ -20,7 +20,13 @@ import {
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
 import { FC, useState } from "react";
-import { cities as cityOptions, City, jsonUrl, xlsxUrl } from "./constants";
+import {
+  categoryOptions,
+  cities as cityOptions,
+  City,
+  jsonUrl,
+  xlsxUrl,
+} from "./constants";
 
 export enum Hour {
   H1 = "1",
@@ -35,6 +41,9 @@ type Props = {
   onCityFilter: (event: SelectChangeEvent<typeof cityOptions>) => void;
   cities: City[];
   lastUpdatedDate?: string;
+  categories: string[];
+  onCategoryFilter: (event: SelectChangeEvent<string[]>) => void;
+  numberOfRowsDisplayed: number;
 };
 
 const Filters: FC<Props> = ({
@@ -43,11 +52,14 @@ const Filters: FC<Props> = ({
   onCityFilter,
   cities,
   lastUpdatedDate,
+  categories,
+  onCategoryFilter,
+  numberOfRowsDisplayed,
 }) => {
   const [closed, setClosed] = useState(false);
 
   return (
-    <Box position="absolute" top={60} left={10}>
+    <Box position="absolute" top={60} left={10} maxWidth="100%">
       <Paper sx={{ p: closed ? 0.5 : 2 }}>
         <Tooltip title={closed ? "Filtreleri aç" : ""} enterDelay={500}>
           <IconButton
@@ -64,6 +76,9 @@ const Filters: FC<Props> = ({
               Filtrele
             </Typography>
             <Stack spacing={2}>
+              <Typography color="textSecondary">
+                {numberOfRowsDisplayed} adet bildirim görüntüleniyor.
+              </Typography>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Typography>Son</Typography>
                 <ToggleButtonGroup
@@ -93,6 +108,21 @@ const Filters: FC<Props> = ({
                   {cityOptions.map((city) => (
                     <MenuItem key={city} value={city}>
                       {capitalize(city)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl fullWidth size="small">
+                <InputLabel>Kategoriler</InputLabel>
+                <Select
+                  multiple
+                  value={categories}
+                  onChange={onCategoryFilter}
+                  input={<OutlinedInput label="Kategoriler" />}
+                >
+                  {categoryOptions.map((category) => (
+                    <MenuItem key={category} value={category}>
+                      {capitalize(category)}
                     </MenuItem>
                   ))}
                 </Select>

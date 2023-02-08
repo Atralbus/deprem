@@ -9,6 +9,15 @@ export enum City {
   Elazığ = "elazığ",
 }
 
+export const categoryOptions = [
+  "Enkaz",
+  "Sağlık",
+  "Barınma/kıyafet",
+  "Yiyecek/su",
+  "Temizlik",
+  "İletişim",
+];
+
 export const cities = Object.values(City);
 
 export const colorMap = {
