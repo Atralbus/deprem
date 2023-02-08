@@ -6,6 +6,8 @@ data preprocessing, analysis, geolocation: [@zafercavdar](https://github.com/zaf
 
 web app: [@aacanakin](https://github.com/aacanakin), [@Atralbus](https://github.com/Atralbus)
 
+for more info dev@dcipheranalytics.com
+
 ## Available Scripts
 
 In the project directory, you can run:
