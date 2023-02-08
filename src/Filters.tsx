@@ -18,6 +18,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { format } from "date-fns";
 import { FC, useState } from "react";
 import {
@@ -38,11 +39,11 @@ export enum Hour {
 type Props = {
   hour: Hour | null;
   onHourFilter: (newHour: Hour | null) => void;
-  onCityFilter: (event: SelectChangeEvent<typeof cityOptions>) => void;
+  onCityFilter: (city: string | City[]) => void;
   cities: City[];
   lastUpdatedDate?: string;
   categories: string[];
-  onCategoryFilter: (event: SelectChangeEvent<string[]>) => void;
+  onCategoryFilter: (category: string | string[]) => void;
   numberOfRowsDisplayed: number;
 };
 
@@ -79,54 +80,80 @@ const Filters: FC<Props> = ({
               <Typography color="textSecondary">
                 {numberOfRowsDisplayed} adet bildirim görüntüleniyor.
               </Typography>
+              <Grid2
+                container
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Grid2 container spacing={1} alignItems="center">
+                  <Grid2>
+                    <Typography>Son</Typography>
+                  </Grid2>
+                  <Grid2>
+                    <ToggleButtonGroup
+                      exclusive
+                      value={hour}
+                      onChange={(_, newHour) => onHourFilter(newHour)}
+                      size="small"
+                    >
+                      {Object.values(Hour).map((hour) => (
+                        <ToggleButton value={hour}>{hour} saat</ToggleButton>
+                      ))}
+                    </ToggleButtonGroup>
+                  </Grid2>
+                </Grid2>
+                <Grid2>
+                  <Tooltip title="Filtreyi kaldır">
+                    <IconButton onClick={() => onHourFilter(null)}>
+                      <DeleteOutline />
+                    </IconButton>
+                  </Tooltip>
+                </Grid2>
+              </Grid2>
               <Stack direction="row" alignItems="center" spacing={1}>
-                <Typography>Son</Typography>
-                <ToggleButtonGroup
-                  exclusive
-                  value={hour}
-                  onChange={(_, newHour) => onHourFilter(newHour)}
-                  size="small"
-                >
-                  {Object.values(Hour).map((hour) => (
-                    <ToggleButton value={hour}>{hour} saat</ToggleButton>
-                  ))}
-                </ToggleButtonGroup>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Şehirler</InputLabel>
+                  <Select
+                    multiple
+                    value={cities}
+                    onChange={(event) => onCityFilter(event.target.value)}
+                    input={<OutlinedInput label="Şehirler" />}
+                  >
+                    {cityOptions.map((city) => (
+                      <MenuItem key={city} value={city}>
+                        {capitalize(city)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
                 <Tooltip title="Filtreyi kaldır">
-                  <IconButton onClick={() => onHourFilter(null)}>
+                  <IconButton onClick={() => onCityFilter([])}>
                     <DeleteOutline />
                   </IconButton>
                 </Tooltip>
               </Stack>
-              <FormControl fullWidth size="small">
-                <InputLabel>Şehirler</InputLabel>
-                <Select
-                  multiple
-                  value={cities}
-                  onChange={onCityFilter}
-                  input={<OutlinedInput label="Şehirler" />}
-                >
-                  {cityOptions.map((city) => (
-                    <MenuItem key={city} value={city}>
-                      {capitalize(city)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl fullWidth size="small">
-                <InputLabel>Kategoriler</InputLabel>
-                <Select
-                  multiple
-                  value={categories}
-                  onChange={onCategoryFilter}
-                  input={<OutlinedInput label="Kategoriler" />}
-                >
-                  {categoryOptions.map((category) => (
-                    <MenuItem key={category} value={category}>
-                      {capitalize(category)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Kategoriler</InputLabel>
+                  <Select
+                    multiple
+                    value={categories}
+                    onChange={(event) => onCategoryFilter(event.target.value)}
+                    input={<OutlinedInput label="Kategoriler" />}
+                  >
+                    {categoryOptions.map((category) => (
+                      <MenuItem key={category} value={category}>
+                        {capitalize(category)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <Tooltip title="Filtreyi kaldır">
+                  <IconButton onClick={() => onCategoryFilter([])}>
+                    <DeleteOutline />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
               <Divider />
               <Stack
                 direction="row"

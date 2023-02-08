@@ -103,17 +103,11 @@ function App() {
     [filtered]
   );
 
-  const handleCityFilter = (event: SelectChangeEvent<typeof cities>) => {
-    const {
-      target: { value },
-    } = event;
+  const handleCityFilter = (value: string | City[]) => {
     setCities(typeof value === "string" ? (value.split(",") as City[]) : value);
   };
 
-  const handleCategoryFilter = (event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event;
+  const handleCategoryFilter = (value: string | string[]) => {
     setCategories(typeof value === "string" ? value.split(",") : value);
   };
 
