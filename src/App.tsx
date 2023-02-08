@@ -8,6 +8,7 @@ import { MAPS_API_KEY } from "./config";
 import { City, colorMap, jsonUrl } from "./constants";
 import Filters, { Hour } from "./Filters";
 import Tooltip from "./Tooltip";
+import { getDateWithoutOffset } from "./utils";
 
 const containerStyle = {
   width: "100vw",
@@ -75,13 +76,8 @@ function App() {
 
     const startHour = hour ? sub(new Date(), { hours: +hour }) : undefined;
     const filteredRows = data.filter((row) => {
-      const dt = new Date(row.Tarih);
       return (
-        (!startHour ||
-          isBefore(
-            startHour,
-            new Date(dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000)
-          )) &&
+        (!startHour || isBefore(startHour, getDateWithoutOffset(row.Tarih))) &&
         (!cities.length || cities.includes(row.Şehir))
       );
     });

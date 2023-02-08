@@ -2,6 +2,7 @@ import { Link, Stack, Typography } from "@mui/material";
 import { InfoWindow } from "@react-google-maps/api";
 import { format } from "date-fns";
 import { FC, useCallback } from "react";
+import { getDateWithoutOffset } from "./utils";
 
 type Datum = {
   Enlem: number;
@@ -24,9 +25,8 @@ const Tooltip: FC<Props> = ({ tooltipRow, setTooltipRow }) => {
           </Link>
         );
       case "Tarih":
-        const dt = new Date(value as any);
         return format(
-          new Date(dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000),
+          getDateWithoutOffset(value as any),
           "dd/MM/yyyy HH:mm:ss"
         );
       case "Google Maps URL":
