@@ -60,7 +60,7 @@ const Filters: FC<Props> = ({
   const [closed, setClosed] = useState(false);
 
   return (
-    <Box position="absolute" top={60} left={10} maxWidth="100%">
+    <Box position="absolute" top={60} left={10} maxWidth="96%">
       <Paper sx={{ p: closed ? 0.5 : 2 }}>
         <Tooltip title={closed ? "Filtreleri aç" : ""} enterDelay={500}>
           <IconButton
