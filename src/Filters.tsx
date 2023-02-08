@@ -11,7 +11,6 @@ import {
   OutlinedInput,
   Paper,
   Select,
-  SelectChangeEvent,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
