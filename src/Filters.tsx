@@ -126,9 +126,9 @@ const Filters: FC<Props> = ({
               </Stack>
               <Stack>
                 <Typography>
-                  Verinin son güncellenme tarihi:{" "}
+                  Son güncellenme:{" "}
                   {lastUpdatedDate
-                    ? format(new Date(+lastUpdatedDate), "dd/MM/yyyy HH:mm:ss")
+                    ? format(new Date(lastUpdatedDate), "dd/MM/yyyy HH:mm:ss")
                     : ""}
                 </Typography>
               </Stack>
