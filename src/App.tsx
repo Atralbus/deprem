@@ -59,10 +59,7 @@ function App() {
       });
   }, []);
 
-  const handleHourFilter = (
-    event: React.MouseEvent<HTMLElement>,
-    newHour: Hour | null
-  ) => {
+  const handleHourFilter = (newHour: Hour | null) => {
     setHour(newHour);
   };
 
