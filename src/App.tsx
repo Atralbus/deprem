@@ -1,4 +1,4 @@
-import { SelectChangeEvent } from "@mui/material";
+import { Backdrop, CircularProgress, SelectChangeEvent } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import axios from "axios";
 import { isBefore, sub } from "date-fns";
@@ -46,11 +46,17 @@ function App() {
   >();
   const [hour, setHour] = useState<Hour | null>(null);
   const [cities, setCities] = useState<City[]>([]);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchRows().then((data) => {
-      setData(data);
-    });
+    setLoading(true);
+    fetchRows()
+      .then((data) => {
+        setData(data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const handleHourFilter = (
@@ -110,6 +116,9 @@ function App() {
           {tooltipRow && <Tooltip tooltipRow={tooltipRow} />}
         </GoogleMap>
       </LoadScript>
+      <Backdrop open={isLoading}>
+        <CircularProgress sx={{ color: "#fff" }} />
+      </Backdrop>
       <Filters
         onHourFilter={handleHourFilter}
         hour={hour}
