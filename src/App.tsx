@@ -62,6 +62,10 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    setTooltipRow(undefined);
+  }, [cities, hour]);
+
   const handleHourFilter = (newHour: Hour | null) => {
     setHour(newHour);
   };

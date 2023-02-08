@@ -23,7 +23,11 @@ const Tooltip: FC<Props> = ({ tooltipRow }) => {
           </Link>
         );
       case "Tarih":
-        return format(new Date(value as any), "dd/MM/yyyy HH:mm:ss");
+        const dt = new Date(value as any);
+        return format(
+          new Date(dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000),
+          "dd/MM/yyyy HH:mm:ss"
+        );
       case "Google Maps URL":
         return (
           <Link href={value as string} target="_blank" rel="noreferrer">
