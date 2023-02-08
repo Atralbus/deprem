@@ -73,10 +73,15 @@ function App() {
   const filtered = useMemo(() => {
     if (!hour && !cities.length) return data;
 
-    const startHour = hour ? sub(new Date(), { hours: +hour }) : new Date();
+    const startHour = hour ? sub(new Date(), { hours: +hour }) : undefined;
     const filteredRows = data.filter((row) => {
+      const dt = new Date(row.Tarih);
       return (
-        (!hour || isBefore(startHour, new Date(row.Tarih))) &&
+        (!startHour ||
+          isBefore(
+            startHour,
+            new Date(dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000)
+          )) &&
         (!cities.length || cities.includes(row.Şehir))
       );
     });
