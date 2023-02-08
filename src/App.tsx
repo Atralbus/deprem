@@ -48,8 +48,6 @@ function App() {
   const [cities, setCities] = useState<City[]>([]);
   const [isLoading, setLoading] = useState(false);
 
-  console.log(`data: `, data[0]);
-
   useEffect(() => {
     setLoading(true);
     fetchRows()

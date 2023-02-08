@@ -49,8 +49,6 @@ const Filters: FC<Props> = ({
 }) => {
   const [closed, setClosed] = useState(false);
 
-  console.log(`lastUpdatedDate: `, lastUpdatedDate);
-
   return (
     <Box position="absolute" top={60} left={10}>
       <Paper sx={{ p: closed ? 0.5 : 2 }}>
