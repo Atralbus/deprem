@@ -1,6 +1,6 @@
 import { Backdrop, CircularProgress, SelectChangeEvent } from "@mui/material";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { isBefore, sub } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
@@ -19,7 +19,7 @@ const center = {
   lng: 36.640183,
 };
 
-const fetchRows = async (): Promise<any> => {
+const fetchRows = async (): Promise<AxiosResponse<any, any> | undefined> => {
   try {
     const response = await axios.get(jsonUrl, {
       headers: {
@@ -28,10 +28,10 @@ const fetchRows = async (): Promise<any> => {
       },
     });
 
-    return response.data;
+    return response;
   } catch (error) {
     console.error(error);
-    return [];
+    return undefined;
   }
 };
 
@@ -47,12 +47,15 @@ function App() {
   const [hour, setHour] = useState<Hour | null>(Hour.H8);
   const [cities, setCities] = useState<City[]>([]);
   const [isLoading, setLoading] = useState(false);
+  const [lastUpdatedDate, setLastModifiedDate] = useState<string>();
 
   useEffect(() => {
     setLoading(true);
     fetchRows()
-      .then((data) => {
-        setData(data);
+      .then((response) => {
+        if (!response) return;
+        setData(response.data);
+        setLastModifiedDate(response.headers["last-modified"]);
       })
       .finally(() => {
         setLoading(false);
@@ -116,12 +119,15 @@ function App() {
       <Backdrop open={isLoading}>
         <CircularProgress sx={{ color: "#fff" }} />
       </Backdrop>
-      <Filters
-        onHourFilter={handleHourFilter}
-        hour={hour}
-        onCityFilter={handleCityFilter}
-        cities={cities}
-      />
+      {!isLoading && (
+        <Filters
+          onHourFilter={handleHourFilter}
+          hour={hour}
+          onCityFilter={handleCityFilter}
+          cities={cities}
+          lastUpdatedDate={lastUpdatedDate}
+        />
+      )}
     </>
   );
 }
