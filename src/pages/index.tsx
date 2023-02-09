@@ -54,20 +54,20 @@ type ServerSideProps = {
   lastModifiedDate: string;
 };
 
-export async function getServerSideProps(): Promise<{
-  props: ServerSideProps;
-}> {
-  const response = await fetchRows();
-  return {
-    props: {
-      data: response?.data || [],
-      lastModifiedDate: response?.headers["last-modified"] || "",
-    },
-  };
-}
+// export async function getServerSideProps(): Promise<{
+//   props: ServerSideProps;
+// }> {
+//   const response = await fetchRows();
+//   return {
+//     props: {
+//       data: response?.data || [],
+//       lastModifiedDate: response?.headers["last-modified"] || "",
+//     },
+//   };
+// }
 
-const App: FC<ServerSideProps> = ({ data, lastModifiedDate }) => {
-  // const [data, setData] = useState<any[]>([]);
+const App: FC = () => {
+  const [data, setData] = useState<any[]>([]);
   const [tooltipRow, setTooltipRow] = useState<
     {
       Enlem: number;
@@ -78,25 +78,25 @@ const App: FC<ServerSideProps> = ({ data, lastModifiedDate }) => {
   const [hour, setHour] = useState<Hour | null>(Hour.H8);
   const [cities, setCities] = useState<City[]>([]);
   const [isLoading, setLoading] = useState(false);
-  // const [lastUpdatedDate, setLastModifiedDate] = useState<string>();
+  const [lastUpdatedDate, setLastUpdatedDate] = useState<string>();
   const [categories, setCategories] = useState<string[]>([]);
   const [isHeatmapDisplayed, setHeatmapDisplayed] = useState(true);
   const [isMarkersDisplayed, setMarkersDisplayed] = useState(true);
   const [map, setMap] = useState<google.maps.Map>();
   const [isLocationErrorDisplayed, setLocationErrorDisplayed] = useState(false);
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   fetchRows()
-  //     .then((response) => {
-  //       if (!response) return;
-  //       setData(response.data);
-  //       setLastModifiedDate(response.headers["last-modified"]);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }, []);
+  useEffect(() => {
+    setLoading(true);
+    fetchRows()
+      .then((response) => {
+        if (!response) return;
+        setData(response.data);
+        setLastUpdatedDate(response.headers["last-modified"]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     setTooltipRow(undefined);
@@ -178,7 +178,7 @@ const App: FC<ServerSideProps> = ({ data, lastModifiedDate }) => {
           zoom={10}
           center={center}
           onClick={() => setTooltipRow(undefined)}
-          onLoad={(map) => setMap(map)}
+          onLoad={(map: any) => setMap(map)}
         >
           {markers}
           {tooltipRow && (
@@ -204,7 +204,7 @@ const App: FC<ServerSideProps> = ({ data, lastModifiedDate }) => {
             hour={hour}
             onCityFilter={handleCityFilter}
             cities={cities}
-            lastUpdatedDate={lastModifiedDate}
+            lastUpdatedDate={lastUpdatedDate}
             categories={categories}
             onCategoryFilter={handleCategoryFilter}
             numberOfRowsDisplayed={filtered.length}
