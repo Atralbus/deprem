@@ -4,6 +4,7 @@ import {
   capitalize,
   Divider,
   FormControl,
+  FormControlLabel,
   IconButton,
   InputLabel,
   Link,
@@ -12,6 +13,7 @@ import {
   Paper,
   Select,
   Stack,
+  Switch,
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
@@ -44,6 +46,10 @@ type Props = {
   categories: string[];
   onCategoryFilter: (category: string | string[]) => void;
   numberOfRowsDisplayed: number;
+  isHeatmapDisplayed: boolean;
+  setHeatmapDisplayed: (show: boolean) => void;
+  isMarkersDisplayed: boolean;
+  setMarkersDisplayed: (show: boolean) => void;
 };
 
 const Filters: FC<Props> = ({
@@ -55,6 +61,10 @@ const Filters: FC<Props> = ({
   categories,
   onCategoryFilter,
   numberOfRowsDisplayed,
+  isHeatmapDisplayed,
+  setHeatmapDisplayed,
+  isMarkersDisplayed,
+  setMarkersDisplayed,
 }) => {
   const [closed, setClosed] = useState(false);
 
@@ -96,7 +106,9 @@ const Filters: FC<Props> = ({
                       size="small"
                     >
                       {Object.values(Hour).map((hour) => (
-                        <ToggleButton value={hour}>{hour} saat</ToggleButton>
+                        <ToggleButton key={hour} value={hour}>
+                          {hour} saat
+                        </ToggleButton>
                       ))}
                     </ToggleButtonGroup>
                   </Grid2>
@@ -152,6 +164,31 @@ const Filters: FC<Props> = ({
                     <DeleteOutline />
                   </IconButton>
                 </Tooltip>
+              </Stack>
+              <Divider />
+              <Stack>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={isHeatmapDisplayed}
+                      onChange={(event) =>
+                        setHeatmapDisplayed(event.target.checked)
+                      }
+                    />
+                  }
+                  label="Yoğunluk haritası göster"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={isMarkersDisplayed}
+                      onChange={(event) =>
+                        setMarkersDisplayed(event.target.checked)
+                      }
+                    />
+                  }
+                  label="İşaretçileri göster"
+                />
               </Stack>
               <Divider />
               <Stack
