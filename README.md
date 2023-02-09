@@ -1,4 +1,12 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Deprem Adres Bildirim Haritası
+
+## Collaborators
+
+data preprocessing, analysis, geocoding, classification: [@zafercavdar](https://github.com/zafercavdar)
+
+web app: [@aacanakin](https://github.com/aacanakin), [@Atralbus](https://github.com/Atralbus)
+
+for more info dev@dcipheranalytics.com
 
 ## Getting Started
 
