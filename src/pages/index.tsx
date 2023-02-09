@@ -8,21 +8,19 @@ import {
   Snackbar,
   Tooltip,
 } from "@mui/material";
-import {
-  GoogleMap,
-  HeatmapLayer,
-  LoadScript,
-  Marker,
-} from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import axios, { AxiosResponse } from "axios";
 import { isBefore, sub } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
-import "./App.css";
-import { MAPS_API_KEY } from "./config";
-import { City, colorMap, jsonUrl } from "./constants";
-import Filters, { Hour } from "./Filters";
-import MapTooltip from "./MapTooltip";
-import { getDateWithoutOffset } from "./utils";
+import dynamic from "next/dynamic";
+import Head from "next/head";
+import { FC, useEffect, useMemo, useState } from "react";
+import Filters, { Hour } from "../components/filters";
+import MapTooltip from "../components/map-tooltip";
+import { MAPS_API_KEY } from "../config";
+import { City, colorMap, jsonUrl } from "../constants";
+import { getDateWithoutOffset } from "../utils";
+
+const Heatmap = dynamic(() => import("../components/heatmap"), { ssr: false });
 
 const containerStyle = {
   width: "100vw",
@@ -52,7 +50,7 @@ const fetchRows = async (): Promise<AxiosResponse<any, any> | undefined> => {
   }
 };
 
-function App() {
+const App: FC = () => {
   const [data, setData] = useState<any[]>([]);
   const [tooltipRow, setTooltipRow] = useState<
     {
@@ -64,7 +62,7 @@ function App() {
   const [hour, setHour] = useState<Hour | null>(Hour.H8);
   const [cities, setCities] = useState<City[]>([]);
   const [isLoading, setLoading] = useState(false);
-  const [lastUpdatedDate, setLastModifiedDate] = useState<string>();
+  const [lastUpdatedDate, setLastUpdatedDate] = useState<string>();
   const [categories, setCategories] = useState<string[]>([]);
   const [isHeatmapDisplayed, setHeatmapDisplayed] = useState(true);
   const [isMarkersDisplayed, setMarkersDisplayed] = useState(true);
@@ -77,7 +75,7 @@ function App() {
       .then((response) => {
         if (!response) return;
         setData(response.data);
-        setLastModifiedDate(response.headers["last-modified"]);
+        setLastUpdatedDate(response.headers["last-modified"]);
       })
       .finally(() => {
         setLoading(false);
@@ -133,15 +131,6 @@ function App() {
     setCategories(typeof value === "string" ? value.split(",") : value);
   };
 
-  const heatmapData = useMemo(() => {
-    if (!window.google) return [];
-    return isHeatmapDisplayed
-      ? filtered.map(
-          (row) => new window.google.maps.LatLng(row.Enlem, row.Boylam)
-        )
-      : [];
-  }, [filtered, isHeatmapDisplayed]);
-
   const handleLocationClick = () => {
     if (window.navigator.geolocation && map) {
       window.navigator.geolocation.getCurrentPosition(
@@ -167,21 +156,22 @@ function App() {
 
   return (
     <>
+      <Head>
+        <title>Deprem Adres Bildirimleri</title>
+      </Head>
       <LoadScript googleMapsApiKey={MAPS_API_KEY} libraries={libraries as any}>
         <GoogleMap
           mapContainerStyle={containerStyle}
           zoom={10}
           center={center}
           onClick={() => setTooltipRow(undefined)}
-          onLoad={(map) => setMap(map)}
+          onLoad={(map: any) => setMap(map)}
         >
           {markers}
           {tooltipRow && (
             <MapTooltip tooltipRow={tooltipRow} setTooltipRow={setTooltipRow} />
           )}
-          {isHeatmapDisplayed && (
-            <HeatmapLayer data={heatmapData} options={{ radius: 30 }} />
-          )}
+          <Heatmap data={filtered} isHeatmapDisplayed={isHeatmapDisplayed} />
         </GoogleMap>
       </LoadScript>
       <Backdrop open={isLoading}>
@@ -228,6 +218,6 @@ function App() {
       </Snackbar>
     </>
   );
-}
+};
 
 export default App;
