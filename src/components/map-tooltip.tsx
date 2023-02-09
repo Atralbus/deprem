@@ -4,12 +4,11 @@ import { Button, Link, Stack, Typography } from "@mui/material";
 import { InfoWindow } from "@react-google-maps/api";
 import { format } from "date-fns";
 import { FC, useCallback } from "react";
-import { getDateWithoutOffset } from "../utils";
+import { getDateWithoutOffset, getMapsUrl } from "../utils";
 
 type Datum = {
   Enlem: number;
   Boylam: number;
-  "Google Maps URL": string;
   "Telefon no": string;
 };
 
@@ -32,26 +31,13 @@ const MapTooltip: FC<Props> = ({ tooltipRow, setTooltipRow }) => {
           getDateWithoutOffset(value as any),
           "dd/MM/yyyy HH:mm:ss"
         );
-      case "Google Maps URL":
-        return (
-          <Button
-            component={Link}
-            href={value as string}
-            target="_blank"
-            rel="noreferrer"
-            variant="contained"
-            startIcon={<Map />}
-          >
-            {`Google Haritalar'da aç`}
-          </Button>
-        );
-
       case "Telefon no": {
         if (!value) return "-";
         return (
           <Stack direction="row" spacing={1} alignItems="center">
             <Link href={`tel:${value}`}>{value}</Link>
             <Button
+              size="small"
               component={Link}
               href={`https://wa.me/${value}`}
               target="_blank"
@@ -79,16 +65,36 @@ const MapTooltip: FC<Props> = ({ tooltipRow, setTooltipRow }) => {
       onCloseClick={() => setTooltipRow(undefined)}
     >
       <Stack spacing={1} sx={{ wordBreak: "break-word" }}>
-        {Object.entries(tooltipRow).map(([key, value]) => (
-          <div>
-            <Typography variant="subtitle2" component="div">
-              {key}
-            </Typography>
-            <Typography color="text.secondary" variant="body2">
-              <>{getLabel(key, value)}</>
-            </Typography>
-          </div>
-        ))}
+        {Object.entries(tooltipRow)
+          .filter(([key]) => key !== "Google Maps URL")
+          .map(([key, value]) => (
+            <div>
+              <Typography variant="subtitle2" component="div">
+                {key}
+              </Typography>
+              <Typography color="text.secondary" variant="body2">
+                <>{getLabel(key, value)}</>
+              </Typography>
+            </div>
+          ))}
+        <div>
+          <Typography variant="subtitle2" component="div">
+            Google Haritalar'da aç
+          </Typography>
+          <Typography color="text.secondary" variant="body2">
+            <Button
+              size="small"
+              component={Link}
+              href={getMapsUrl(tooltipRow.Enlem, tooltipRow.Boylam)}
+              target="_blank"
+              rel="noreferrer"
+              variant="contained"
+              startIcon={<Map />}
+            >
+              Google Haritalar'da aç
+            </Button>
+          </Typography>
+        </div>
       </Stack>
     </InfoWindow>
   );

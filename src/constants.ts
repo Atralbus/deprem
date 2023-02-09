@@ -38,3 +38,5 @@ export const colorMap = {
 const baseUrl = "https://storage.googleapis.com/deprem-app-bucket/database.";
 export const jsonUrl = `${baseUrl}json`;
 export const xlsxUrl = `${baseUrl}xlsx`;
+
+export const baseMapsUrl = "https://maps.google.com/?q=";
