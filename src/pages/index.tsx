@@ -34,12 +34,13 @@ const center = {
 
 const libraries = ["visualization"] as const;
 
-const fetchRows = async (): Promise<AxiosResponse<any, any> | undefined> => {
+const fetchData = async (
+  hour: Hour | null
+): Promise<AxiosResponse<any, any> | undefined> => {
   try {
-    const response = await axios.get(`${jsonUrl}?ts=${Date.now()}`, {
+    const response = await axios.get(`/api/data?hour=${hour}`, {
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
       },
     });
 
@@ -71,7 +72,7 @@ const App: FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetchRows()
+    fetchData(hour)
       .then((response) => {
         if (!response) return;
         setData(response.data);
@@ -80,7 +81,7 @@ const App: FC = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [hour]);
 
   useEffect(() => {
     setTooltipRow(undefined);
@@ -91,12 +92,10 @@ const App: FC = () => {
   };
 
   const filtered = useMemo(() => {
-    if (!hour && !cities.length && !categories.length) return data;
+    if (!cities.length && !categories.length) return data;
 
-    const startHour = hour ? sub(new Date(), { hours: +hour }) : undefined;
     const filteredRows = data.filter((row) => {
       return (
-        (!startHour || isBefore(startHour, getDateWithoutOffset(row.Tarih))) &&
         (!cities.length || cities.includes(row.Şehir)) &&
         (!categories.length || categories.includes(row.Kategori))
       );
