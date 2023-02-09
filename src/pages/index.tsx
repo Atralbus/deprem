@@ -12,6 +12,7 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import axios, { AxiosResponse } from "axios";
 import { isBefore, sub } from "date-fns";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 import { FC, useEffect, useMemo, useState } from "react";
 import Filters, { Hour } from "../components/filters";
 import MapTooltip from "../components/map-tooltip";
@@ -155,6 +156,9 @@ const App: FC = () => {
 
   return (
     <>
+      <Head>
+        <title>Deprem Adres Bildirimleri</title>
+      </Head>
       <LoadScript googleMapsApiKey={MAPS_API_KEY} libraries={libraries as any}>
         <GoogleMap
           mapContainerStyle={containerStyle}
