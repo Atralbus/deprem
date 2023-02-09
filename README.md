@@ -2,7 +2,7 @@
 
 ## Collaborators
 
-data preprocessing, analysis, geocoding, classification : [@zafercavdar](https://github.com/zafercavdar)
+data preprocessing, analysis, geocoding, classification: [@zafercavdar](https://github.com/zafercavdar)
 
 web app: [@aacanakin](https://github.com/aacanakin), [@Atralbus](https://github.com/Atralbus)
 
