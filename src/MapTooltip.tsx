@@ -17,7 +17,7 @@ type Props = {
   setTooltipRow: (tooltipRow?: Datum) => void;
 };
 
-const Tooltip: FC<Props> = ({ tooltipRow, setTooltipRow }) => {
+const MapTooltip: FC<Props> = ({ tooltipRow, setTooltipRow }) => {
   const getLabel = useCallback((key: string, value: string | number) => {
     switch (key) {
       case "URL":
@@ -93,4 +93,4 @@ const Tooltip: FC<Props> = ({ tooltipRow, setTooltipRow }) => {
   );
 };
 
-export default Tooltip;
+export default MapTooltip;

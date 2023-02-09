@@ -1,4 +1,13 @@
-import { Backdrop, CircularProgress } from "@mui/material";
+import { MyLocation } from "@mui/icons-material";
+import {
+  Alert,
+  Backdrop,
+  CircularProgress,
+  IconButton,
+  Paper,
+  Snackbar,
+  Tooltip,
+} from "@mui/material";
 import {
   GoogleMap,
   HeatmapLayer,
@@ -12,7 +21,7 @@ import "./App.css";
 import { MAPS_API_KEY } from "./config";
 import { City, colorMap, jsonUrl } from "./constants";
 import Filters, { Hour } from "./Filters";
-import Tooltip from "./Tooltip";
+import MapTooltip from "./MapTooltip";
 import { getDateWithoutOffset } from "./utils";
 
 const containerStyle = {
@@ -59,6 +68,8 @@ function App() {
   const [categories, setCategories] = useState<string[]>([]);
   const [isHeatmapDisplayed, setHeatmapDisplayed] = useState(true);
   const [isMarkersDisplayed, setMarkersDisplayed] = useState(true);
+  const [map, setMap] = useState<google.maps.Map>();
+  const [isLocationErrorDisplayed, setLocationErrorDisplayed] = useState(true);
 
   useEffect(() => {
     setLoading(true);
@@ -122,15 +133,37 @@ function App() {
     setCategories(typeof value === "string" ? value.split(",") : value);
   };
 
-  const heatmapData = useMemo(
-    () =>
-      isHeatmapDisplayed
-        ? filtered.map(
-            (row) => new window.google.maps.LatLng(row.Enlem, row.Boylam)
-          )
-        : [],
-    [filtered, isHeatmapDisplayed]
-  );
+  const heatmapData = useMemo(() => {
+    if (!window.google) return [];
+    return isHeatmapDisplayed
+      ? filtered.map(
+          (row) => new window.google.maps.LatLng(row.Enlem, row.Boylam)
+        )
+      : [];
+  }, [filtered, isHeatmapDisplayed]);
+
+  const handleLocationClick = () => {
+    if (window.navigator.geolocation && map) {
+      window.navigator.geolocation.getCurrentPosition(
+        (position) => {
+          map.panTo({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          map.setZoom(15);
+        },
+        (error) => {
+          if (error.code === error.PERMISSION_DENIED) {
+            setLocationErrorDisplayed(true);
+          }
+        }
+      );
+    }
+  };
+
+  const handleAlertClose = () => {
+    setLocationErrorDisplayed(false);
+  };
 
   return (
     <>
@@ -140,10 +173,11 @@ function App() {
           zoom={10}
           center={center}
           onClick={() => setTooltipRow(undefined)}
+          onLoad={(map) => setMap(map)}
         >
           {markers}
           {tooltipRow && (
-            <Tooltip tooltipRow={tooltipRow} setTooltipRow={setTooltipRow} />
+            <MapTooltip tooltipRow={tooltipRow} setTooltipRow={setTooltipRow} />
           )}
           {isHeatmapDisplayed && (
             <HeatmapLayer data={heatmapData} options={{ radius: 30 }} />
@@ -154,21 +188,44 @@ function App() {
         <CircularProgress sx={{ color: "#fff" }} />
       </Backdrop>
       {!isLoading && (
-        <Filters
-          onHourFilter={handleHourFilter}
-          hour={hour}
-          onCityFilter={handleCityFilter}
-          cities={cities}
-          lastUpdatedDate={lastUpdatedDate}
-          categories={categories}
-          onCategoryFilter={handleCategoryFilter}
-          numberOfRowsDisplayed={filtered.length}
-          isHeatmapDisplayed={isHeatmapDisplayed}
-          setHeatmapDisplayed={setHeatmapDisplayed}
-          isMarkersDisplayed={isMarkersDisplayed}
-          setMarkersDisplayed={setMarkersDisplayed}
-        />
+        <>
+          <Paper sx={{ position: "fixed", right: 10, bottom: 200 }}>
+            <Tooltip title="Konumumu göster">
+              <IconButton onClick={handleLocationClick}>
+                <MyLocation />
+              </IconButton>
+            </Tooltip>
+          </Paper>
+          <Filters
+            onHourFilter={handleHourFilter}
+            hour={hour}
+            onCityFilter={handleCityFilter}
+            cities={cities}
+            lastUpdatedDate={lastUpdatedDate}
+            categories={categories}
+            onCategoryFilter={handleCategoryFilter}
+            numberOfRowsDisplayed={filtered.length}
+            isHeatmapDisplayed={isHeatmapDisplayed}
+            setHeatmapDisplayed={setHeatmapDisplayed}
+            isMarkersDisplayed={isMarkersDisplayed}
+            setMarkersDisplayed={setMarkersDisplayed}
+          />
+        </>
       )}
+      <Snackbar
+        open={isLocationErrorDisplayed}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        message=""
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          Konumunuzu gösterme yetkisi yok.
+        </Alert>
+      </Snackbar>
     </>
   );
 }
