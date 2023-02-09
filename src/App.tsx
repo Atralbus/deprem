@@ -69,7 +69,7 @@ function App() {
   const [isHeatmapDisplayed, setHeatmapDisplayed] = useState(true);
   const [isMarkersDisplayed, setMarkersDisplayed] = useState(true);
   const [map, setMap] = useState<google.maps.Map>();
-  const [isLocationErrorDisplayed, setLocationErrorDisplayed] = useState(true);
+  const [isLocationErrorDisplayed, setLocationErrorDisplayed] = useState(false);
 
   useEffect(() => {
     setLoading(true);
