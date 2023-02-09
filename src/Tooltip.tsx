@@ -1,4 +1,5 @@
-import { Link, Stack, Typography } from "@mui/material";
+import { Link, Stack, Typography, Button } from "@mui/material";
+import { Map, WhatsApp } from "@mui/icons-material";
 import { InfoWindow } from "@react-google-maps/api";
 import { format } from "date-fns";
 import { FC, useCallback } from "react";
@@ -32,23 +33,34 @@ const Tooltip: FC<Props> = ({ tooltipRow, setTooltipRow }) => {
         );
       case "Google Maps URL":
         return (
-          <Link href={value as string} target="_blank" rel="noreferrer">
+          <Button
+            component={Link}
+            href={value as string}
+            target="_blank"
+            rel="noreferrer"
+            variant="contained"
+            startIcon={<Map />}
+          >
             Google Haritalar'da aç
-          </Link>
+          </Button>
         );
 
       case "Telefon no": {
         if (!value) return "-";
         return (
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} alignItems="center">
             <Link href={`tel:${value}`}>{value}</Link>
-            <Link
+            <Button
+              component={Link}
               href={`https://wa.me/${value}`}
               target="_blank"
               rel="noreferrer"
+              color="success"
+              variant="contained"
+              startIcon={<WhatsApp />}
             >
               WhatsApp
-            </Link>
+            </Button>
           </Stack>
         );
       }
