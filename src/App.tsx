@@ -96,7 +96,7 @@ function App() {
           icon={{
             url: `http://maps.google.com/mapfiles/ms/icons/${
               colorMap[row.Şehir as keyof typeof colorMap]
-            }-dot.png`,
+            }.png`,
           }}
         ></Marker>
       )),

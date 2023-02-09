@@ -7,6 +7,8 @@ export enum City {
   Diyarbakır = "diyarbakır",
   Osmaniye = "osmaniye",
   Elazığ = "elazığ",
+  Adana = "adana",
+  Kilis = "kilis",
 }
 
 export const categoryOptions = [
@@ -21,14 +23,16 @@ export const categoryOptions = [
 export const cities = Object.values(City);
 
 export const colorMap = {
-  [City.Hatay]: "yellow",
-  [City.Kahramanmaraş]: "blue",
-  [City.Adıyaman]: "green",
-  [City.Malatya]: "ltblue",
-  [City.Gaziantep]: "orange",
-  [City.Diyarbakır]: "pink",
-  [City.Osmaniye]: "purple",
-  [City.Elazığ]: "red",
+  [City.Hatay]: "yellow-dot",
+  [City.Kahramanmaraş]: "blue-dot",
+  [City.Adıyaman]: "green-dot",
+  [City.Malatya]: "ltblue-dot",
+  [City.Gaziantep]: "orange-dot",
+  [City.Diyarbakır]: "pink-dot",
+  [City.Osmaniye]: "purple-dot",
+  [City.Elazığ]: "red-dot",
+  [City.Kilis]: "lightblue",
+  [City.Adana]: "pink",
 };
 
 const baseUrl = "https://storage.googleapis.com/deprem-app-bucket/database.";
