@@ -22,7 +22,7 @@ const center = {
 
 const fetchRows = async (): Promise<AxiosResponse<any, any> | undefined> => {
   try {
-    const response = await axios.get(jsonUrl, {
+    const response = await axios.get(`${jsonUrl}?ts=${Date.now()}`, {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
