@@ -49,23 +49,6 @@ const fetchRows = async (): Promise<AxiosResponse<any, any> | undefined> => {
   }
 };
 
-type ServerSideProps = {
-  data: any[];
-  lastModifiedDate: string;
-};
-
-// export async function getServerSideProps(): Promise<{
-//   props: ServerSideProps;
-// }> {
-//   const response = await fetchRows();
-//   return {
-//     props: {
-//       data: response?.data || [],
-//       lastModifiedDate: response?.headers["last-modified"] || "",
-//     },
-//   };
-// }
-
 const App: FC = () => {
   const [data, setData] = useState<any[]>([]);
   const [tooltipRow, setTooltipRow] = useState<
