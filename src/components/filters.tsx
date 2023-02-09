@@ -19,7 +19,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import Grid2 from "@mui/material/Unstable_Grid2";
 import { format } from "date-fns";
 import { FC, useState } from "react";
 import {
@@ -28,7 +28,7 @@ import {
   City,
   jsonUrl,
   xlsxUrl,
-} from "./constants";
+} from "../constants";
 
 export enum Hour {
   H1 = "1",

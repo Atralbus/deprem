@@ -1,9 +1,10 @@
-import { Link, Stack, Typography, Button } from "@mui/material";
+/* eslint-disable react/jsx-key */
 import { Map, WhatsApp } from "@mui/icons-material";
+import { Button, Link, Stack, Typography } from "@mui/material";
 import { InfoWindow } from "@react-google-maps/api";
 import { format } from "date-fns";
 import { FC, useCallback } from "react";
-import { getDateWithoutOffset } from "./utils";
+import { getDateWithoutOffset } from "../utils";
 
 type Datum = {
   Enlem: number;
@@ -41,7 +42,7 @@ const MapTooltip: FC<Props> = ({ tooltipRow, setTooltipRow }) => {
             variant="contained"
             startIcon={<Map />}
           >
-            Google Haritalar'da aç
+            {`Google Haritalar'da aç`}
           </Button>
         );
 
