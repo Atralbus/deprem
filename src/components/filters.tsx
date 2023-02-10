@@ -196,16 +196,6 @@ const Filters: FC<Props> = ({
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Stack spacing={1} direction="row">
-                  <Typography>Veri kaynağı: </Typography>
-                  <Link href={xlsxUrl} target="_blank" rel="noreferrer">
-                    Excel
-                  </Link>
-                  <Link href={jsonUrl} target="_blank" rel="noreferrer">
-                    JSON
-                  </Link>
-                </Stack>
-
                 <Tooltip title="Teknik iletişim">
                   <IconButton
                     component={Link}
