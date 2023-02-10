@@ -34,7 +34,7 @@ export const colorMap = {
   [City.Elazığ]: 'red-dot',
   [City.Kilis]: 'lightblue',
   [City.Adana]: 'pink',
-  [City.Sanliurfa]: 'red-dot',
+  [City.Sanliurfa]: 'yellow',
 };
 
 const baseUrl = 'https://storage.googleapis.com/deprem-app-bucket/database.';
