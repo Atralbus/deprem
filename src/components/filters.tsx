@@ -1,4 +1,4 @@
-import { Clear, DeleteOutline, FilterList, GitHub } from "@mui/icons-material";
+import { Clear, DeleteOutline, FilterList } from "@mui/icons-material";
 import {
   Box,
   capitalize,
@@ -191,22 +191,6 @@ const Filters: FC<Props> = ({
                 />
               </Stack>
               <Divider />
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Tooltip title="Teknik iletişim">
-                  <IconButton
-                    component={Link}
-                    href="https://github.com/Atralbus/deprem"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <GitHub />
-                  </IconButton>
-                </Tooltip>
-              </Stack>
               <Stack>
                 <Typography>
                   Son güncellenme:{" "}
