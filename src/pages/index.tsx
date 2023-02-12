@@ -16,10 +16,10 @@ import { isBefore, sub } from "date-fns";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
-import Filters, { Hour } from "../components/filters";
+import Filters from "../components/filters";
 import MapTooltip from "../components/map-tooltip";
 import { MAPS_API_KEY } from "../config";
-import { City, jsonUrl } from "../constants";
+import { Category, City, Datum, Hour, jsonUrl } from "../constants";
 import { getDateWithoutOffset } from "../utils";
 
 const Heatmap = dynamic(() => import("../components/heatmap"), { ssr: false });
@@ -36,7 +36,9 @@ const center = {
 
 const libraries = ["visualization"] as const;
 
-const fetchRows = async (): Promise<AxiosResponse<any, any> | undefined> => {
+const fetchRows = async (): Promise<
+  AxiosResponse<Datum[], any> | undefined
+> => {
   try {
     const response = await axios.get(`${jsonUrl}?ts=${Date.now()}`, {
       headers: {
@@ -53,19 +55,13 @@ const fetchRows = async (): Promise<AxiosResponse<any, any> | undefined> => {
 };
 
 const App: FC = () => {
-  const [data, setData] = useState<any[]>([]);
-  const [tooltipRow, setTooltipRow] = useState<
-    {
-      Enlem: number;
-      Boylam: number;
-      "Google Maps URL": string;
-    } & any
-  >();
+  const [data, setData] = useState<Datum[]>([]);
+  const [tooltipRow, setTooltipRow] = useState<Datum>();
   const [hour, setHour] = useState<Hour | null>(Hour.H8);
   const [cities, setCities] = useState<City[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [lastUpdatedDate, setLastUpdatedDate] = useState<string>();
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isHeatmapDisplayed, setHeatmapDisplayed] = useState(true);
   const [isMarkersDisplayed, setMarkersDisplayed] = useState(true);
   const [map, setMap] = useState<google.maps.Map>();
@@ -102,7 +98,8 @@ const App: FC = () => {
       return (
         (!startHour || isBefore(startHour, getDateWithoutOffset(row.Tarih))) &&
         (!cities.length || cities.includes(row.Şehir)) &&
-        (!categories.length || categories.includes(row.Kategori))
+        (!categories.length ||
+          row.Kategori.some((kategori) => categories.includes(kategori)))
       );
     });
     return filteredRows;
@@ -112,8 +109,10 @@ const App: FC = () => {
     setCities(typeof value === "string" ? (value.split(",") as City[]) : value);
   };
 
-  const handleCategoryFilter = (value: string | string[]) => {
-    setCategories(typeof value === "string" ? value.split(",") : value);
+  const handleCategoryFilter = (value: string | Category[]) => {
+    setCategories(
+      typeof value === "string" ? (value.split(",") as Category[]) : value
+    );
   };
 
   const handleLocationClick = () => {

@@ -21,14 +21,13 @@ import Typography from "@mui/material/Typography";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { format } from "date-fns";
 import { FC, useState } from "react";
-import { categoryOptions, cities as cityOptions, City } from "../constants";
-
-export enum Hour {
-  H1 = "1",
-  H2 = "2",
-  H4 = "4",
-  H8 = "8",
-}
+import {
+  Category,
+  categoryOptions,
+  cities as cityOptions,
+  City,
+  Hour,
+} from "../constants";
 
 type Props = {
   hour: Hour | null;
@@ -36,8 +35,8 @@ type Props = {
   onCityFilter: (city: string | City[]) => void;
   cities: City[];
   lastUpdatedDate?: string;
-  categories: string[];
-  onCategoryFilter: (category: string | string[]) => void;
+  categories: Category[];
+  onCategoryFilter: (category: string | Category[]) => void;
   numberOfRowsDisplayed: number;
   isHeatmapDisplayed: boolean;
   setHeatmapDisplayed: (show: boolean) => void;
