@@ -7,7 +7,6 @@ import {
   FormControlLabel,
   IconButton,
   InputLabel,
-  Link,
   MenuItem,
   OutlinedInput,
   Paper,
@@ -22,13 +21,7 @@ import Typography from "@mui/material/Typography";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { format } from "date-fns";
 import { FC, useState } from "react";
-import {
-  categoryOptions,
-  cities as cityOptions,
-  City,
-  jsonUrl,
-  xlsxUrl,
-} from "../constants";
+import { categoryOptions, cities as cityOptions, City } from "../constants";
 
 export enum Hour {
   H1 = "1",
@@ -50,6 +43,8 @@ type Props = {
   setHeatmapDisplayed: (show: boolean) => void;
   isMarkersDisplayed: boolean;
   setMarkersDisplayed: (show: boolean) => void;
+  isClusteringEnabled: boolean;
+  setClusteringEnabled: (show: boolean) => void;
 };
 
 const Filters: FC<Props> = ({
@@ -65,6 +60,8 @@ const Filters: FC<Props> = ({
   setHeatmapDisplayed,
   isMarkersDisplayed,
   setMarkersDisplayed,
+  isClusteringEnabled,
+  setClusteringEnabled,
 }) => {
   const [closed, setClosed] = useState(false);
 
@@ -189,6 +186,19 @@ const Filters: FC<Props> = ({
                   }
                   label="İşaretçileri göster"
                 />
+                {isMarkersDisplayed && (
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={isClusteringEnabled}
+                        onChange={(event) =>
+                          setClusteringEnabled(event.target.checked)
+                        }
+                      />
+                    }
+                    label="İşaretçileri kümele"
+                  />
+                )}
               </Stack>
               <Divider />
               <Stack>

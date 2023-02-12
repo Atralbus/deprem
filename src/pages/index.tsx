@@ -1,3 +1,4 @@
+import Markers from "@/components/markers";
 import { MyLocation } from "@mui/icons-material";
 import {
   Alert,
@@ -8,16 +9,17 @@ import {
   Snackbar,
   Tooltip,
 } from "@mui/material";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, MarkerClusterer } from "@react-google-maps/api";
+import { Clusterer } from "@react-google-maps/marker-clusterer";
 import axios, { AxiosResponse } from "axios";
 import { isBefore, sub } from "date-fns";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import Filters, { Hour } from "../components/filters";
 import MapTooltip from "../components/map-tooltip";
 import { MAPS_API_KEY } from "../config";
-import { City, colorMap, jsonUrl } from "../constants";
+import { City, jsonUrl } from "../constants";
 import { getDateWithoutOffset } from "../utils";
 
 const Heatmap = dynamic(() => import("../components/heatmap"), { ssr: false });
@@ -68,6 +70,8 @@ const App: FC = () => {
   const [isMarkersDisplayed, setMarkersDisplayed] = useState(true);
   const [map, setMap] = useState<google.maps.Map>();
   const [isLocationErrorDisplayed, setLocationErrorDisplayed] = useState(false);
+  const [isClusteringEnabled, setClusteringEnabled] = useState(false);
+  const clustererRef = useRef<Clusterer>();
 
   useEffect(() => {
     setLoading(true);
@@ -104,25 +108,6 @@ const App: FC = () => {
     return filteredRows;
   }, [hour, data, cities, categories]);
 
-  const markers = useMemo(
-    () =>
-      isMarkersDisplayed
-        ? filtered.map((row) => (
-            <Marker
-              key={row.URL}
-              position={{ lat: row.Enlem, lng: row.Boylam }}
-              onClick={() => setTooltipRow(row)}
-              icon={{
-                url: `http://maps.google.com/mapfiles/ms/icons/${
-                  colorMap[row.Şehir as keyof typeof colorMap]
-                }.png`,
-              }}
-            ></Marker>
-          ))
-        : null,
-    [filtered, isMarkersDisplayed]
-  );
-
   const handleCityFilter = (value: string | City[]) => {
     setCities(typeof value === "string" ? (value.split(",") as City[]) : value);
   };
@@ -154,6 +139,16 @@ const App: FC = () => {
     setLocationErrorDisplayed(false);
   };
 
+  useEffect(() => {
+    clustererRef.current?.repaint();
+  }, [filtered]);
+
+  useEffect(() => {
+    if (isClusteringEnabled) return;
+
+    clustererRef.current?.clearMarkers();
+  }, [isClusteringEnabled]);
+
   return (
     <>
       <Head>
@@ -167,7 +162,22 @@ const App: FC = () => {
           onClick={() => setTooltipRow(undefined)}
           onLoad={(map: any) => setMap(map)}
         >
-          {markers}
+          {isMarkersDisplayed && isClusteringEnabled && (
+            <MarkerClusterer
+              onLoad={(clusterer) => (clustererRef.current = clusterer)}
+            >
+              {(clusterer) => (
+                <Markers
+                  clusterer={clusterer}
+                  onClick={setTooltipRow}
+                  data={filtered}
+                />
+              )}
+            </MarkerClusterer>
+          )}
+          {isMarkersDisplayed && !isClusteringEnabled && (
+            <Markers onClick={setTooltipRow} data={filtered} />
+          )}
           {tooltipRow && (
             <MapTooltip tooltipRow={tooltipRow} setTooltipRow={setTooltipRow} />
           )}
@@ -199,6 +209,8 @@ const App: FC = () => {
             setHeatmapDisplayed={setHeatmapDisplayed}
             isMarkersDisplayed={isMarkersDisplayed}
             setMarkersDisplayed={setMarkersDisplayed}
+            isClusteringEnabled={isClusteringEnabled}
+            setClusteringEnabled={setClusteringEnabled}
           />
         </>
       )}
