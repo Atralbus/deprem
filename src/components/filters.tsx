@@ -1,4 +1,4 @@
-import { Clear, DeleteOutline, FilterList } from "@mui/icons-material";
+import { Clear, DeleteOutline, FilterList } from '@mui/icons-material'
 import {
   Box,
   capitalize,
@@ -16,35 +16,35 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
-} from "@mui/material";
-import Typography from "@mui/material/Typography";
-import Grid2 from "@mui/material/Unstable_Grid2";
-import { format } from "date-fns";
-import { FC, useState } from "react";
+} from '@mui/material'
+import Typography from '@mui/material/Typography'
+import Grid2 from '@mui/material/Unstable_Grid2'
+import { format } from 'date-fns'
+import { FC, useState } from 'react'
 import {
   Category,
   categoryOptions,
   cities as cityOptions,
   City,
   Hour,
-} from "../constants";
+} from '../constants'
 
 type Props = {
-  hour: Hour | null;
-  onHourFilter: (newHour: Hour | null) => void;
-  onCityFilter: (city: string | City[]) => void;
-  cities: City[];
-  lastUpdatedDate?: string;
-  categories: Category[];
-  onCategoryFilter: (category: string | Category[]) => void;
-  numberOfRowsDisplayed: number;
-  isHeatmapDisplayed: boolean;
-  setHeatmapDisplayed: (show: boolean) => void;
-  isMarkersDisplayed: boolean;
-  setMarkersDisplayed: (show: boolean) => void;
-  isClusteringEnabled: boolean;
-  setClusteringEnabled: (show: boolean) => void;
-};
+  hour: Hour | null
+  onHourFilter: (newHour: Hour | null) => void
+  onCityFilter: (city: string | City[]) => void
+  cities: City[]
+  lastUpdatedDate?: string
+  categories: Category[]
+  onCategoryFilter: (category: string | Category[]) => void
+  numberOfRowsDisplayed: number
+  isHeatmapDisplayed: boolean
+  setHeatmapDisplayed: (show: boolean) => void
+  isMarkersDisplayed: boolean
+  setMarkersDisplayed: (show: boolean) => void
+  isClusteringEnabled: boolean
+  setClusteringEnabled: (show: boolean) => void
+}
 
 const Filters: FC<Props> = ({
   hour,
@@ -62,16 +62,16 @@ const Filters: FC<Props> = ({
   isClusteringEnabled,
   setClusteringEnabled,
 }) => {
-  const [closed, setClosed] = useState(false);
+  const [closed, setClosed] = useState(false)
 
   return (
     <Box position="absolute" top={60} left={10} maxWidth="96%">
       <Paper sx={{ p: closed ? 0.5 : 2 }}>
-        <Tooltip title={closed ? "Filtreleri aç" : ""} enterDelay={500}>
+        <Tooltip title={closed ? 'Filtreleri aç' : ''} enterDelay={500}>
           <IconButton
             size="small"
-            onClick={() => setClosed((closed) => !closed)}
-            sx={closed ? undefined : { position: "absolute", right: 8, top: 8 }}
+            onClick={() => setClosed(closed => !closed)}
+            sx={closed ? undefined : { position: 'absolute', right: 8, top: 8 }}
           >
             {closed ? <FilterList /> : <Clear />}
           </IconButton>
@@ -101,7 +101,7 @@ const Filters: FC<Props> = ({
                       onChange={(_, newHour) => onHourFilter(newHour)}
                       size="small"
                     >
-                      {Object.values(Hour).map((hour) => (
+                      {Object.values(Hour).map(hour => (
                         <ToggleButton key={hour} value={hour}>
                           {hour} saat
                         </ToggleButton>
@@ -123,10 +123,10 @@ const Filters: FC<Props> = ({
                   <Select
                     multiple
                     value={cities}
-                    onChange={(event) => onCityFilter(event.target.value)}
+                    onChange={event => onCityFilter(event.target.value)}
                     input={<OutlinedInput label="Şehirler" />}
                   >
-                    {cityOptions.map((city) => (
+                    {cityOptions.map(city => (
                       <MenuItem key={city} value={city}>
                         {capitalize(city)}
                       </MenuItem>
@@ -145,10 +145,10 @@ const Filters: FC<Props> = ({
                   <Select
                     multiple
                     value={categories}
-                    onChange={(event) => onCategoryFilter(event.target.value)}
+                    onChange={event => onCategoryFilter(event.target.value)}
                     input={<OutlinedInput label="Kategoriler" />}
                   >
-                    {categoryOptions.map((category) => (
+                    {categoryOptions.map(category => (
                       <MenuItem key={category} value={category}>
                         {capitalize(category)}
                       </MenuItem>
@@ -167,7 +167,7 @@ const Filters: FC<Props> = ({
                   control={
                     <Switch
                       checked={isHeatmapDisplayed}
-                      onChange={(event) =>
+                      onChange={event =>
                         setHeatmapDisplayed(event.target.checked)
                       }
                     />
@@ -178,7 +178,7 @@ const Filters: FC<Props> = ({
                   control={
                     <Switch
                       checked={isMarkersDisplayed}
-                      onChange={(event) =>
+                      onChange={event =>
                         setMarkersDisplayed(event.target.checked)
                       }
                     />
@@ -190,7 +190,7 @@ const Filters: FC<Props> = ({
                     control={
                       <Switch
                         checked={isClusteringEnabled}
-                        onChange={(event) =>
+                        onChange={event =>
                           setClusteringEnabled(event.target.checked)
                         }
                       />
@@ -202,10 +202,10 @@ const Filters: FC<Props> = ({
               <Divider />
               <Stack>
                 <Typography>
-                  Son güncellenme:{" "}
+                  Son güncellenme:{' '}
                   {lastUpdatedDate
-                    ? format(new Date(lastUpdatedDate), "dd/MM/yyyy HH:mm:ss")
-                    : ""}
+                    ? format(new Date(lastUpdatedDate), 'dd/MM/yyyy HH:mm:ss')
+                    : ''}
                 </Typography>
               </Stack>
             </Stack>
@@ -213,7 +213,7 @@ const Filters: FC<Props> = ({
         )}
       </Paper>
     </Box>
-  );
-};
+  )
+}
 
-export default Filters;
+export default Filters
