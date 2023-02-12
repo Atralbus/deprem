@@ -12,16 +12,18 @@ export enum City {
   Sanliurfa = 'şanlıurfa',
 }
 
-export const categoryOptions = [
-  'Enkaz',
-  'Sağlık',
-  'Barınma/kıyafet',
-  'Yiyecek/su',
-  'Temizlik',
-  'İletişim',
-];
+export enum Category {
+  Enkaz = 'Enkaz',
+  Sağlık = 'Sağlık',
+  BarınmaKıyafet = 'Barınma/kıyafet',
+  YiyecekSu = 'Yiyecek/su',
+  Temizlik = 'Temizlik',
+  İletişim = 'İletişim',
+}
 
-export const cities = Object.values(City);
+export const categoryOptions = Object.values(Category)
+
+export const cities = Object.values(City)
 
 export const colorMap = {
   [City.Hatay]: 'yellow-dot',
@@ -35,10 +37,29 @@ export const colorMap = {
   [City.Kilis]: 'lightblue',
   [City.Adana]: 'pink',
   [City.Sanliurfa]: 'yellow',
-};
+}
 
-const baseUrl = 'https://storage.googleapis.com/deprem-app-bucket/database.';
-export const jsonUrl = `${baseUrl}json`;
-export const xlsxUrl = `${baseUrl}xlsx`;
+const baseUrl = 'https://storage.googleapis.com/deprem-app-bucket/database.'
+export const jsonUrl = `${baseUrl}json`
+export const xlsxUrl = `${baseUrl}xlsx`
 
-export const baseMapsUrl = 'https://maps.google.com/?q=';
+export const baseMapsUrl = 'https://maps.google.com/?q='
+
+export type Datum = {
+  Enlem: number
+  Boylam: number
+  Kategori: Category[]
+  URL: string
+  Tarih: number
+  Tweet: string
+  'Kullanıcı adı': string
+  Şehir: City
+  'Telefon no': string
+}
+
+export enum Hour {
+  H1 = '1',
+  H2 = '2',
+  H4 = '4',
+  H8 = '8',
+}

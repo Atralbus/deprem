@@ -1,17 +1,17 @@
-import { colorMap } from "@/constants";
-import { Marker, MarkerProps } from "@react-google-maps/api";
-import { FC } from "react";
+import { colorMap } from '@/constants'
+import { Marker, MarkerProps } from '@react-google-maps/api'
+import { FC } from 'react'
 
 type Props = {
-  clusterer?: MarkerProps["clusterer"];
-  data: any[];
-  onClick: (row: any) => void;
-};
+  clusterer?: MarkerProps['clusterer']
+  data: any[]
+  onClick: (row: any) => void
+}
 
 const Markers: FC<Props> = ({ clusterer, data, onClick }) => {
   return (
     <>
-      {data.map((row) => (
+      {data.map(row => (
         <Marker
           key={row.URL}
           position={{ lat: row.Enlem, lng: row.Boylam }}
@@ -26,7 +26,7 @@ const Markers: FC<Props> = ({ clusterer, data, onClick }) => {
         />
       ))}
     </>
-  );
-};
+  )
+}
 
-export default Markers;
+export default Markers
